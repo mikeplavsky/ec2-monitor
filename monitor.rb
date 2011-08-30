@@ -21,14 +21,28 @@ ec2 = RightAws::Ec2.new cfg["access_key_id"], cfg["secret_access_key"], :logger 
 
 while true
 
-  res = ec2.describe_instances :filters => {"instance-type" => "m1.small", "instance-lifecycle" => "spot", "instance-state-name" => "running"}
+  res = ec2.describe_instances :filters => {
+
+      "instance-type" => "m1.small", 
+      "instance-lifecycle" => "spot", 
+      "instance-state-name" => "running"
+
+  }
 
   res.each do |i|
 
     id = i[:aws_instance_id]
     info "#{id} launched at #{i[:aws_launch_time]}"
 
-    stats = acw.get_metric_statistics :dimentions => {"InstanceId"=>id, "Service" => "EC2", "Namespace" => "AWS"}, :start_time => (Time.now.utc - 60*60)
+    stats = acw.get_metric_statistics( :dimentions => {
+      
+      "InstanceId"=>id, 
+      "Service" => "EC2", 
+      "Namespace" => "AWS"
+
+      },
+      
+      :start_time => (Time.now.utc - 60*60))
 
     cpu = stats[:datapoints].sort {|x,y| x[:timestamp] <=> y[:timestamp]}
 
