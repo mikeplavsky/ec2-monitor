@@ -36,7 +36,7 @@ while true
 
     stats = acw.get_metric_statistics( :dimentions => {
       
-      "InstanceId"=>id, 
+      "InstanceId" => id, 
       "Service" => "EC2", 
       "Namespace" => "AWS"
 
