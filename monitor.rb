@@ -14,10 +14,12 @@ def info str
   @logger.info str
 end
 
-cfg = YAML.load( File.read( File.join path, "config.yml" ))  
+@cfg = YAML.load( File.read( File.join path, "config.yml" ))  
 
-acw = RightAws::AcwInterface.new cfg["access_key_id"], cfg["secret_access_key"], :logger => @logger
-ec2 = RightAws::Ec2.new cfg["access_key_id"], cfg["secret_access_key"], :logger => @logger
+create = ->(t) { t.new @cfg["access_key_id"], @cfg["secret_access_key"], :logger => @logger }  
+
+acw = create.( RightAws::AcwInterface )
+ec2 = create.( RightAws::Ec2 )
 
 while true
 
