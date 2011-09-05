@@ -7,7 +7,8 @@ path = File.join File.dirname( __FILE__ )
 
 require 'logger'
 
-@logger = Logger.new File.join( path,"log.txt" ), 'daily' 
+`mkdir ./log`
+@logger = Logger.new File.join(path,"log","log.txt"), 'daily' 
 @logger.level = Logger::DEBUG
 
 def info str 
