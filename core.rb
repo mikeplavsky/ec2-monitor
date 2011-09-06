@@ -1,5 +1,7 @@
 def analyze ec2, acw, logger
 
+  logger.info "Analyzing..." 
+
   res = ec2.describe_instances :filters => {
 
       "instance-type" => "m1.small", 

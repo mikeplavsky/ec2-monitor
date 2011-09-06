@@ -7,13 +7,9 @@ path = File.join File.dirname( __FILE__ )
 
 require 'logger'
 
-`mkdir ./log`
+`[ ! -x ./log ] && mkdir ./log`
 @logger = Logger.new File.join(path,"log","log.txt"), 'daily' 
-@logger.level = Logger::DEBUG
-
-def info str 
-  @logger.info str
-end
+@logger.level = Logger::INFO
 
 @cfg = YAML.load( File.read( File.join path, "config.yml" ))  
 
