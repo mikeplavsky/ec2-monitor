@@ -22,48 +22,11 @@ create = ->(t) { t.new @cfg["access_key_id"], @cfg["secret_access_key"], :logger
 acw = create.( RightAws::AcwInterface )
 ec2 = create.( RightAws::Ec2 )
 
+require "./core.rb"
+
 while true
 
-  res = ec2.describe_instances :filters => {
-
-      "instance-type" => "m1.small", 
-      "instance-lifecycle" => "spot", 
-      "instance-state-name" => "running"
-
-  }
-
-  res.each do |i|
-
-    id = i[:aws_instance_id]
-    info "#{id} launched at #{i[:aws_launch_time]}"
-
-    stats = acw.get_metric_statistics( :dimentions => {
-      
-      "InstanceId" => id, 
-      "Service" => "EC2", 
-      "Namespace" => "AWS"
-
-      },
-      
-      :start_time => (Time.now.utc - 60*60))
-
-    cpu = stats[:datapoints].sort {|x,y| x[:timestamp] <=> y[:timestamp]}
-
-    if cpu.length < 2 
-      info "started less then 15 minutes ago, skipping"
-      next
-    end
-    
-    load = cpu.last[:average]
-    info "#{id} load average: #{load}"
-
-    if load < 5 
-      info "#{id} Terminating"
-      info ec2.terminate_instances(id)
-    end
-
-  end
-
+  analyze ec2, acw, @logger
   sleep 60*5
 
 end
