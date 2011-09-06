@@ -1,6 +1,29 @@
 describe "monitor" do
+
+  require  "./core.rb"
+
+  let (:ec2) {double("ec2")}
+  let (:acw) {double("acw")}
+  let (:logger) {double("logger")}
+
+  before (:each) do
+    logger.should_receive :info
+  end
   
-  it "should see running spot instances"
+  it "should check running spot instances" do
+    
+    ec2.should_receive(:describe_instances).with( :filters => {
+     
+      "instance-type" => "m1.small", 
+      "instance-lifecycle" => "spot", 
+      "instance-state-name" => "running"
+
+    }){[]}       
+
+    analyze ec2, acw, logger
+
+  end
+
   it "should check load average"
   it "should do nothing with loaded instances"
   it "should terminate resting instance"
