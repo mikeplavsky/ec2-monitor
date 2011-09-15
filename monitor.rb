@@ -13,10 +13,10 @@ require 'logger'
 
 @cfg = YAML.load( File.read( File.join path, "config.yml" ))  
 
-params = @cfg["access_key_id"], @cfg["secret_access_key"], {:logger => @logger}
+params = @cfg["access_key_id"], @cfg["secret_access_key"] 
 
-ec2 = RightAws::Ec2.new *params
-acw = RightAws::AcwInterface.new *params
+ec2 = RightAws::Ec2.new *params, {:logger => @logger}
+acw = RightAws::AcwInterface.new *params, {:logger => @logger}
 
 require "./core.rb"
 
