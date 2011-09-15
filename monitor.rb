@@ -9,14 +9,14 @@ require 'logger'
 
 `[ ! -x ./log ] && mkdir ./log`
 @logger = Logger.new File.join(path,"log","log.txt"), 'daily' 
-@logger.level = Logger::INFO
+@logger.level = Logger::DEBUG
 
 @cfg = YAML.load( File.read( File.join path, "config.yml" ))  
 
-create = ->(t) { t.new @cfg["access_key_id"], @cfg["secret_access_key"], :logger => @logger }  
+params = @cfg["access_key_id"], @cfg["secret_access_key"], {:logger => @logger}
 
-acw = create.( RightAws::AcwInterface )
-ec2 = create.( RightAws::Ec2 )
+ec2 = RightAws::Ec2.new *params
+acw = RightAws::AcwInterface.new *params
 
 require "./core.rb"
 
