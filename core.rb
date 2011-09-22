@@ -1,10 +1,9 @@
-def analyze ec2, acw, logger
+def analyze ec2, acw, logger, kill
 
   logger.info "Analyzing..." 
 
   res = ec2.describe_instances :filters => {
 
-      "instance-type" => "m1.small", 
       "instance-lifecycle" => "spot", 
       "instance-state-name" => "running"
 
@@ -35,7 +34,7 @@ def analyze ec2, acw, logger
     load = cpu.last[:average]
     logger.info "#{id} load average: #{load}"
 
-    if load < 5 
+    if kill && load < 5 
       logger.info "#{id} Terminating"
       logger.info ec2.terminate_instances(id)
     end
