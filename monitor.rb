@@ -31,7 +31,7 @@ $LOAD_PATH.push path
 require 'logger'
 
 `[ ! -x ./log ] && mkdir ./log`
-@logger = Logger.new File.join(".","log","ec2-monitor-log.txt"), 'daily' 
+@logger = Logger.new File.join(".","log","ec2-monitor.log"), 'daily' 
 @logger.level = Logger::DEBUG
 
 @cfg = YAML.load( File.read( "config.yml" ))   
@@ -42,10 +42,4 @@ ec2 = RightAws::Ec2.new *params, {:logger => @logger}
 acw = RightAws::AcwInterface.new *params, {:logger => @logger}
 
 require "core"
-
-while true
-
-  analyze ec2, acw, @logger, options[:kill]
-  sleep 60*5
-
-end
+analyze( ec2, acw, @logger, options[:kill] )
