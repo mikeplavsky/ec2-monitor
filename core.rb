@@ -3,10 +3,7 @@ def analyze ec2, acw, logger, kill
   logger.info "Analyzing..." 
 
   res = ec2.describe_instances :filters => {
-
-      "instance-lifecycle" => "spot", 
       "instance-state-name" => "running"
-
   }
 
   res.each do |i|
